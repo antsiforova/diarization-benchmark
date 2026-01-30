@@ -1,0 +1,24 @@
+# Benchmark scheduling configuration
+
+schedules:
+  # AMI Corpus - run weekly
+  - dataset: ami
+    interval_hours: 168
+    enabled: true
+    description: "AMI Meeting Corpus - weekly evaluation for quick feedback"
+  
+  # Sequestered data - run monthly
+  - dataset: sequestered
+    interval_hours: 720 
+    enabled: true
+    description: "Conversation recordings - monthly evaluation for stability"
+
+# To add a new dataset:
+# 1. Add a new entry to this file
+# 2. Restart the scheduler container: docker-compose restart benchmark-scheduler
+# 
+# Example:
+#  - dataset: example-dataset
+#    interval_hours: 336  # Bi-weekly
+#    enabled: true
+#    description: "Example dataset"

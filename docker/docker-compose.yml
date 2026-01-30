@@ -1,0 +1,106 @@
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: benchmark-postgres
+    environment:
+      POSTGRES_DB: diarization_benchmark
+      POSTGRES_USER: benchmark
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-benchmark}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U benchmark -d diarization_benchmark"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - benchmark-network
+    restart: unless-stopped
+  
+  # Benchmark application
+  benchmark-app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: benchmark-app
+    command: sh -c "cd dashboard && npm run dev -- -H 0.0.0.0"
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql+asyncpg://benchmark:${POSTGRES_PASSWORD:-benchmark}@postgres:5432/diarization_benchmark
+      TEST_DATABASE_URL: postgresql+asyncpg://benchmark:${POSTGRES_PASSWORD:-benchmark}@postgres:5432/diarization_benchmark
+      # Storage Configuration
+      DATA_DIR: /data
+      RESULTS_DIR: /results
+      CACHE_DIR: /cache
+      # Logging Configuration
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+      # Environment
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DOCKER_ENV: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../:/app
+      - /app/node_modules
+      - /app/dashboard/node_modules
+      - data_volume:/data
+      - results_volume:/results
+      - cache_volume:/cache
+      - ../config:/app/config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - benchmark-network
+    restart: unless-stopped
+
+  # Continuous benchmark scheduler
+  benchmark-scheduler:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: benchmark-scheduler
+    command: python scheduler.py --config /app/config/schedule.yaml
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql+asyncpg://benchmark:${POSTGRES_PASSWORD:-benchmark}@postgres:5432/diarization_benchmark
+      # Storage Configuration
+      DATA_DIR: /data
+      RESULTS_DIR: /results
+      CACHE_DIR: /cache
+      # Logging Configuration
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: text
+      # Environment
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+    volumes:
+      - ../:/app
+      - data_volume:/data
+      - results_volume:/results
+      - cache_volume:/cache
+      - ../config:/app/config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - benchmark-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  data_volume:
+    driver: local
+  results_volume:
+    driver: local
+  cache_volume:
+    driver: local
+
+networks:
+  benchmark-network:
+    driver: bridge

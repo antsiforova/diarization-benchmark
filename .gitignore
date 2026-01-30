@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+# lib/ - commented out to allow dashboard/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+PIPFILE.lock
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Prefect
+.prefect/
+
+# Data files (excluding test data)
+data/ami/audio/EN2001a/
+data/ami/audio/EN2001b/
+data/ami/audio/EN2001d/
+data/ami/audio/EN2001e/
+*.cache
+
+# Audio files are too large for Git
+# *.wav
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+*.txt
+
+# Environment
+.env
+.env.local
+.env.save
+
+# Cache
+cache/
+
+# Results
+results/*.json
+results/*.csv
+results_*.json
+view_results.py
+
+# PostgreSQL
+*.sql
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Next.js
+.next/
+node_modules/
+dashboard/.env*.local
+dashboard/next-env.d.ts
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml

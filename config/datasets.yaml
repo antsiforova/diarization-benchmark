@@ -1,0 +1,50 @@
+ami:
+  name: "AMI Test"
+  display_name: "AMI Test"
+  type: "ami"
+  description: "Evaluation on AMI Meeting Corpus"
+  
+  # Paths
+  audio_dir: "data/ami/audio/test"
+  annotation_dir: "data/ami/annotations/test"
+  
+  # Benchmark metadata
+  benchmark:
+    name: "AMI Corpus Evaluation"
+    description: "Evaluation on AMI Meeting Corpus"
+  
+  # Dataset metadata
+  metadata:
+    split: "test"
+    source: "AMI-diarization-setup"
+  
+  # Annotation configuration
+  annotations:
+    format: "rttm"
+    collar: 0.25
+    skip_overlap: false
+
+sequestered:
+  name: "Sequestered Data"
+  display_name: "Sequestered Data"
+  type: "sequestered"
+  description: "Evaluation on conversation recordings (never used for training)"
+  
+  # Paths
+  audio_dir: "data/sequestered/recordings/audio"
+  annotation_dir: "data/sequestered/recordings/annotations"
+  
+  # Benchmark metadata
+  benchmark:
+    name: "Sequestered Data Evaluation"
+    description: "Evaluation on conversation recordings"
+  
+  # Dataset metadata
+  metadata:
+    source: "conversation_recordings"
+  
+  # Annotation configuration
+  annotations:
+    format: "rttm"
+    collar: 0.25
+    skip_overlap: false
