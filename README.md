@@ -185,3 +185,34 @@ Key design decisions:
 - **Database**: PostgreSQL 15
 - **Metrics**: pyannote.metrics, pyannote.core
 - **Infrastructure**: Docker, Docker Compose
+
+## Design Trade-offs 
+
+**Note.**
+I missed this section by mistake when submitting the project — I overlooked this part of the task. I added it later in the last commit dated Feb 5, which is why it appears at the very end of the document.
+I want to be transparent about this. If you consider adding this section after submission to be inappropriate, please feel free to ignore this part.
+
+**What I Optimized For:**
+- Quick setup - one command and everything works
+- Independence - no external API dependencies
+- Easy extensibility - new datasets via YAML config, no code changes
+
+**What I Deliberately Simplified:**
+- **Mock vs Real API** - Avoided dependencies and API costs
+- **Single Database** - Sufficient for benchmark system volumes, no cluster needed
+- **No Database Migrations** - Direct schema creation is acceptable for demos. Production would need migration system with versioning and rollbacks
+- **Manual AMI Download** - Required due to licensing terms
+
+## Future Improvements
+
+**Short-term:**
+- Support for real diarization APIs
+- Email notifications on failures
+- Export results to CSV/JSON 
+
+**For Production:**
+- User authentication
+- Automated database backups
+- System monitoring
+- Cloud storage integration for larger datasets
+- Configurable custom metrics
